@@ -1,68 +1,60 @@
-@Config
 
-@Autonomous
-public class DriveFunctions extends OpMode {
-    private PIDController controllerx;
-    private PIDController controllery;
+
+
+public class DriveFunctions{
+    private static PIDController controllerx;
+    private static PIDController controllery;
 
     public static double py = 0.0003, iy = 0.0001, dy = 0.00003;
     public static double px = 0.0003, ix = 0.01, dx = 0.00003;
     public static double f = 0;
 
+    controllery.setPID(py, iy, dy);
+    controllerx.setPID(px, ix, dx);
+
     public static int targetx = 0;
     public static int targety = 0;
-
+    public static double realpow[3];
     private final double ticks_in_degree = 103.8;
 
-    private DcMotorEx FL;
-    private DcMotorEx FR;
-    private DcMotorEx BL;
-    private DcMotorEx BR;
 
 
-    @Override
-    public void init() {
-        controllery = new PIDController(py, iy, dy);
-        controllerx = new PIDController(px, ix, dx);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        BL = hardwareMap.get(DcMotorEx.class, "FR");
-        BR = hardwareMap.get(DcMotorEx.class, "FL");
-        FL = hardwareMap.get(DcMotorEx.class, "BR");
-        FR = hardwareMap.get(DcMotorEx.class, "BL");
+    public static double[] pyrocalc(x,y) {
+        int YPos = -BR.getCurrentPosition();
+        int XPos = BL.getCurrentPosition();
+        double pidy = controllery.calculate(YPos, y);
+        double pidx = controllerx.calculate(XPos, x);
+        double ff = Math.cos(Math.toRadians(y / ticks_in_degree)) * f;
+        double powery = pidy + ff;
+        double powerx = pidx + ff;
+        //Add in the power x for the correction code
+        
+        double realpow[0] = (-powery - powerx);
+        double realpow[1] = (powery - powerx);
+        double realpow[2] = (-powery + powerx);
+        double realpow[3] = (powery + powerx);
 
+        return(realpow);
+
+/*
+for actual auton add func like this:
+void drive(x, y){
+    
+(potentially add timer code here)
+
+
+    pyrocalc(x,y);
+    BL.setPower(realpow[0]);
+}
+
+
+
+
+*/
 
     }
 
-
-    @Override
-    //static void drive(int targetx, int targety) {
-        public void loop() {
-            controllery.setPID(py, iy, dy);
-            controllerx.setPID(px, ix, dx);
-            int YPos = -BR.getCurrentPosition();
-            int XPos = BL.getCurrentPosition();
-            double pidy = controllery.calculate(YPos, targety);
-            double pidx = controllerx.calculate(XPos, targetx);
-            double ff = Math.cos(Math.toRadians(targety / ticks_in_degree)) * f;
-            double powery = pidy + ff;
-            double powerx = pidx + ff;
-            //Add in the power x for the correction code
-            FL.setPower(-powery - powerx);
-            FR.setPower(powery - powerx);
-            BL.setPower(-powery + powerx);
-            BR.setPower(powery + powerx);
-            telemetry.addData("posy", YPos);
-            telemetry.addData("posx", XPos);
-            telemetry.addData("targety", targety);
-            telemetry.addData("targetx", targetx);
-            telemetry.update();
-        }
-
-        public static void test() {
-
-        }
-    }
 //}
 
 
