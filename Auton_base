@@ -61,9 +61,9 @@ public class RedRight extends LinearOpMode{
     public void Drive(double xgo, double ygo, double last){
         ElapsedTime sec = new ElapsedTime();
         sec.reset();
-        
-        while(current < last){
-            double current = sec.seconds();
+        double current = sec.seconds();
+        while(opModeIsActive()){
+            current = sec.seconds();
 
             double YPos = BR.getCurrentPosition();
             double XPos = BL.getCurrentPosition();
@@ -74,8 +74,13 @@ public class RedRight extends LinearOpMode{
             FR.setPower(realpow[1]);
             BL.setPower(realpow[2]);
             BR.setPower(realpow[3]);
-            break;
+            if(last <= current){
+
+                break;
+            }
+
         }
+
     }
 }
 //}
@@ -85,7 +90,7 @@ public class RedRight extends LinearOpMode{
 
 //Still todo:
 //add rem control hub into the mechanum chassis
-//configure the robot 
+//configure the robot
 //Add init for odo pods
 //add set power to every motor
 //tune the robot
