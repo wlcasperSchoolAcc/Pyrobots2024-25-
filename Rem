@@ -1,0 +1,78 @@
+package org.firstinspires.ftc.teamcode.Testing;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+@Config
+
+@Autonomous
+public class Rem extends OpMode {
+    private PIDController slid;
+
+
+    public static double p = 0, i = 0.0001, d = 0.00003;
+
+    public static double f = 0;
+    public static int target = 0;
+
+    private final double ticks_in_degree = 103.8;
+
+    private DcMotorEx rem;
+
+
+
+    @Override
+    public void init() {
+        slid = new PIDController(p, i, d);
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        rem = hardwareMap.get(DcMotorEx.class, "rem");
+
+
+
+    }
+
+
+    @Override
+    //static void drive(int targetx, int targety) {
+        public void loop() {
+            slid.setPID(p, i, d);
+            int Pos = rem.getCurrentPosition();
+
+            double pid = controllery.calculate(Pos, target);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+            double power = pid + ff;
+            //Add in the power x for the correction code
+
+
+
+            BR.setPower(power);
+            telemetry.addData("pos", Pos);
+
+            telemetry.addData("target", target);
+
+            telemetry.update();
+        }
+    }
+//}
+
+
+//Added initialized motors for the four
+
+//Still todo:
+//add rem control hub into the mechanum chassis
+//configure the robot 
+//Add init for odo pods
+//add set power to every motor
+//tune the robot
+//p = 0.00
+//i = 0.0
+//d = 0.000
+//f = 0
