@@ -1,0 +1,80 @@
+package org.firstinspires.ftc.teamcode.Testing;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+
+
+@Config
+public class SlideFunctions{
+
+
+    public static double py = 0.0003, iy = 0.0001, dy = 0.00003;
+    public static double px = 0.0003, ix = 0.01, dx = 0.00003;
+    public static double f = 0;
+
+    private static PIDController rem = new PIDController(px,ix,dx);
+
+
+
+
+    public static int targetx = 0;
+    public static int targety = 0;
+
+    private final double ticks_in_degree = 103.8;
+
+
+
+
+    public static double remcalc(double goto, double now) {
+        double Pos = now;
+        double limit = goto;
+        double pid = controllery.calculate(now, limit);
+
+        double ff = Math.cos(Math.toRadians(limit / 103.8)) * f; //103.8 is the ticks_in_degree
+        double power = pid + ff;
+
+        //Add in the power x for the correction code
+        double slidepow = power
+
+
+        return (slidepow);
+  }
+}
+
+//}
+
+
+//Added initialized motors for the four
+
+//Still todo:
+//add rem control hub into the mechanum chassis
+//configure the robot
+//Add init for odo pods
+//add set power to every motor
+//tune the robot
+//p = 0.001
+//i = 0.01
+//d = 0.0001
+//f = 0
+
+
+//Added initialized motors for the four
+
+//Still todo:
+//add rem control hub into the mechanum chassis
+//configure the robot 
+//Add init for odo pods
+//add set power to every motor
+//tune the robot
+//p = 0.001
+//i = 0.01
+//d = 0.0001
+//f = 0
