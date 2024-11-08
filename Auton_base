@@ -10,12 +10,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Testing.DriveFunctions;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 
 @Autonomous(name = "AutoLocation1")
 
 public class RedRight extends LinearOpMode{
+
     private PIDController controllerx;
     private PIDController controllery;
 
@@ -50,16 +51,20 @@ public class RedRight extends LinearOpMode{
         int XPos = BL.getCurrentPosition();
 
         waitForStart();
-        Drive(0000,1000,XPos,YPos);
-
+        Drive(3000,3000,3);
+        sleep(1000);
+        Drive(0,0,3);
 
     }
 
 
-    public void Drive(double xgo, double ygo, double XPos, double YPos){
-        while(opModeIsActive()){
-            YPos = BR.getCurrentPosition();
-            XPos = BL.getCurrentPosition();
+    public void Drive(double xgo, double ygo, double last){
+        ElapsedTime sec = new ElapsedTime();
+        sec.reset();
+        double current = sec.seconds();
+        while(current < last){
+            double YPos = BR.getCurrentPosition();
+            double XPos = BL.getCurrentPosition();
 
             double realpow[] = DriveFunctions.pyrocalc(XPos, YPos, xgo, ygo);
 
@@ -67,6 +72,7 @@ public class RedRight extends LinearOpMode{
             FR.setPower(realpow[1]);
             BL.setPower(realpow[2]);
             BR.setPower(realpow[3]);
+            break;
         }
     }
 }
@@ -85,4 +91,3 @@ public class RedRight extends LinearOpMode{
 //i = 0.01
 //d = 0.0001
 //f = 0
-
