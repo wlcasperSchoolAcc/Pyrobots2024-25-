@@ -61,8 +61,10 @@ public class RedRight extends LinearOpMode{
     public void Drive(double xgo, double ygo, double last){
         ElapsedTime sec = new ElapsedTime();
         sec.reset();
-        double current = sec.seconds();
+        
         while(current < last){
+            double current = sec.seconds();
+
             double YPos = BR.getCurrentPosition();
             double XPos = BL.getCurrentPosition();
 
