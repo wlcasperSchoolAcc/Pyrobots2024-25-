@@ -1,1 +1,88 @@
+package org.firstinspires.ftc.teamcode.Auton;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.Testing.DriveFunctions;
+
+@Config
+
+@Autonomous(name = "AutoLocation1")
+
+public class RedRight extends LinearOpMode{
+    private PIDController controllerx;
+    private PIDController controllery;
+
+    public static double py = 0.0003, iy = 0.0001, dy = 0.00003;
+    public static double px = 0.0003, ix = 0.01, dx = 0.00003;
+    public static double f = 0;
+
+    public static int targetx = 0;
+    public static int targety = 0;
+
+    private final double ticks_in_degree = 103.8;
+
+    private DcMotorEx FL;
+    private DcMotorEx FR;
+    private DcMotorEx BL;
+    private DcMotorEx BR;
+
+
+
+
+
+    public void runOpMode() throws InterruptedException{
+
+
+        FL = hardwareMap.get(DcMotorEx.class, "BR");
+        BR = hardwareMap.get(DcMotorEx.class, "FL");
+        FR = hardwareMap.get(DcMotorEx.class, "BL");
+        BL = hardwareMap.get(DcMotorEx.class, "FR");
+
+
+        int YPos = BR.getCurrentPosition();
+        int XPos = BL.getCurrentPosition();
+
+        waitForStart();
+        Drive(0000,1000,XPos,YPos);
+
+
+    }
+
+
+    public void Drive(double xgo, double ygo, double XPos, double YPos){
+        while(opModeIsActive()){
+            YPos = BR.getCurrentPosition();
+            XPos = BL.getCurrentPosition();
+
+            double realpow[] = DriveFunctions.pyrocalc(XPos, YPos, xgo, ygo);
+
+            FL.setPower(realpow[0]);
+            FR.setPower(realpow[1]);
+            BL.setPower(realpow[2]);
+            BR.setPower(realpow[3]);
+        }
+    }
+}
+//}
+
+
+//Added initialized motors for the four
+
+//Still todo:
+//add rem control hub into the mechanum chassis
+//configure the robot 
+//Add init for odo pods
+//add set power to every motor
+//tune the robot
+//p = 0.001
+//i = 0.01
+//d = 0.0001
+//f = 0
 
