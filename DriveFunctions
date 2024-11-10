@@ -48,23 +48,24 @@ public class DriveFunctions{
 
         return (realpow);
     }
-/*
-for actual auton add func like this:
-void drive(x, y){
+}
 
-(potentially add timer code here)
+    public static double[] turncalc(double nowx, double nowy,double x, double y) {
+        double YPos = -nowy;
+        double pidy = controllery.calculate(YPos, y);
+
+        double ff = Math.cos(Math.toRadians(y / 103.8)) * f; //103.8 is the ticks_in_degree
+        double powery = pidy + ff;
+
+        //Add in the power x for the correction code
+        double realpow[] = {powery, powery, powery, powery};
 
 
-    pyrocalc(x,y);
-    BL.setPower(realpow[0]);
+        return (realpow);
+    }
 }
 
 
-
-
-*/
-
-    }
 
 //}
 
