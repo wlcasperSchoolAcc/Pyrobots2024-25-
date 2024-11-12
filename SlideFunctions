@@ -16,12 +16,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class SlideFunctions{
 
 
-    public static double py = 0.0003, iy = 0.0001, dy = 0.00003;
-    public static double px = 0.0003, ix = 0.01, dx = 0.00003;
+
+    public static double prem = 0.0003, irem = 0.0001, drem = 0.00003;
+    public static double pram = 0.0003, iram = 0.01, dram = 0.00003;
+
+
     public static double f = 0;
 
-    private static PIDController rem = new PIDController(px,ix,dx);
-
+    private static PIDController controllerREM = new PIDController(prem,irem,drem);
+    private static PIDController controllerRAM = new PIDController(pram, iram,dram);
 
 
 
@@ -33,20 +36,23 @@ public class SlideFunctions{
 
 
 
-    public static double remcalc(double goto, double now) {
-        double Pos = now;
-        double limit = goto;
-        double pid = controllery.calculate(now, limit);
+    public static double remcalc(double now, double getto) {
+        double Pos = nowy;
 
-        double ff = Math.cos(Math.toRadians(limit / 103.8)) * f; //103.8 is the ticks_in_degree
+        double pid = controllerr.calculate(Pos, getto);
+
+        double ff = Math.cos(Math.toRadians(getto / 103.8)) * f; //103.8 is the ticks_in_degree
         double power = pid + ff;
-
         //Add in the power x for the correction code
-        double slidepow = power
+        double realpow = power;
 
 
-        return (slidepow);
-  }
+        return (realpow);
+    }
+
+
+
+
 }
 
 //}
