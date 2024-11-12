@@ -39,7 +39,21 @@ public class SlideFunctions{
     public static double remcalc(double now, double getto) {
         double Pos = nowy;
 
-        double pid = controllerr.calculate(Pos, getto);
+        double pid = controllerREM.calculate(Pos, getto);
+
+        double ff = Math.cos(Math.toRadians(getto / 103.8)) * f; //103.8 is the ticks_in_degree
+        double power = pid + ff;
+        //Add in the power x for the correction code
+        double realpow = power;
+
+
+        return (realpow);
+    }
+
+    public static double ramcalc(double now, double getto) {
+        double Pos = nowy;
+
+        double pid = controllerRAM.calculate(Pos, getto);
 
         double ff = Math.cos(Math.toRadians(getto / 103.8)) * f; //103.8 is the ticks_in_degree
         double power = pid + ff;
