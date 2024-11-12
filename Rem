@@ -16,7 +16,7 @@ public class Rem extends OpMode {
     private PIDController slid;
 
 
-    public static double p = 0, i = 0.0001, d = 0.00003;
+    public static double p = 0, i = 0.000, d = 0.0000;
 
     public static double f = 0;
     public static int target = 0;
@@ -53,7 +53,7 @@ public class Rem extends OpMode {
 
 
 
-            BR.setPower(power);
+            rem.setPower(power);
             telemetry.addData("pos", Pos);
 
             telemetry.addData("target", target);
