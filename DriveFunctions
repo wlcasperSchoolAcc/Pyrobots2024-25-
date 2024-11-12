@@ -16,12 +16,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class DriveFunctions{
 
 
+
     public static double py = 0.0003, iy = 0.0001, dy = 0.00003;
     public static double px = 0.0003, ix = 0.01, dx = 0.00003;
+
+    public static double pr = 0.05, ir = 0, dr = 0.002;
     public static double f = 0;
 
     private static PIDController controllerx = new PIDController(px,ix,dx);
     private static PIDController controllery = new PIDController(py, iy,dy);
+
+    private static PIDController controllerr = new PIDController(pr,ir,dr);
 
 
 
@@ -33,39 +38,51 @@ public class DriveFunctions{
 
 
 
-    public static double[] pyrocalc(double nowx, double nowy,double x, double y) {
+    public static double[] pyrocalc(double nowx, double nowy, double nowr, double x, double y, double r) {
         double YPos = -nowy;
 
         double XPos = nowx;
+        double RPos = nowr;
+        double pidr = controllerr.calculate(RPos, r);
         double pidy = controllery.calculate(YPos, y);
         double pidx = controllerx.calculate(XPos, x);
         double ff = Math.cos(Math.toRadians(y / 103.8)) * f; //103.8 is the ticks_in_degree
         double powery = pidy + ff;
         double powerx = pidx + ff;
+        double powerr = pidr + ff;
         //Add in the power x for the correction code
-        double realpow[] = {-powery - powerx, powery - powerx, -powery + powerx, powery + powerx};
+        double realpow[] = {-powery - powerx + powerr, powery - powerx + powerr, -powery + powerx + powerr, powery + powerx + powerr};
 
 
         return (realpow);
     }
-}
 
-    public static double[] turncalc(double nowx, double nowy,double x, double y) {
-        double YPos = -nowy;
-        double pidy = controllery.calculate(YPos, y);
-
-        double ff = Math.cos(Math.toRadians(y / 103.8)) * f; //103.8 is the ticks_in_degree
-        double powery = pidy + ff;
-
-        //Add in the power x for the correction code
-        double realpow[] = {powery, powery, powery, powery};
+    public static double ryan(double nowr, double r){
+        double RPos = nowr;
+        double pidr = controllerr.calculate(RPos, r);
+        double power = pidr;
+        return power;
 
 
-        return (realpow);
+
     }
+ /*
+for actual auton add func like this:
+void drive(x, y){
+
+(potentially add timer code here)
+
+
+    pyrocalc(x,y);
+    BL.setPower(realpow[0]);
 }
 
 
+
+
+*/
+
+    }
 
 //}
 
