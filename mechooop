@@ -1,0 +1,143 @@
+package org.firstinspires.ftc.teamcode.TeleOp;
+
+import com.qualcomm.robotcore.*;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name = "Mechoop")
+public class Mechoop extends LinearOpMode {
+
+    // For whatever reason, this does not work when uncommented and causes EMERGENCY STOP NullPointerException crash
+    // private DcMotor motorFL = hardwareMap.dcMotor.get("motorFrontLeft");
+    // private DcMotor motorFR = hardwareMap.dcMotor.get("motorFrontRight");
+    // private DcMotor motorBL = hardwareMap.dcMotor.get("motorBackLeft");
+    // private DcMotor motorBR = hardwareMap.dcMotor.get("motorBackRight");
+    DcMotorEx FL;
+    DcMotorEx BL;
+    DcMotorEx FR;
+    DcMotorEx BR;
+    DcMotorEx ram;
+    DcMotorEx rotation;
+
+
+    @Override
+    public void runOpMode() throws InterruptedException{
+        // Why are these declared inside of a function instead of the class?
+        FL = hardwareMap.get(DcMotorEx.class, "BR");
+        BR = hardwareMap.get(DcMotorEx.class, "FL");
+        FR = hardwareMap.get(DcMotorEx.class, "BL");
+        BL = hardwareMap.get(DcMotorEx.class, "FR");
+        ram = hardwareMap.get(DcMotorEx.class, "ram");
+        rotation = hardwareMap.get(DcMotorEx.class, "rem");
+
+        Servo grabr = hardwareMap.servo.get("grabr");
+        Servo grabl = hardwareMap.servo.get("grabl");
+        CRServo wrist = hardwareMap.crservo.get("wrist");
+        CRServo spin = hardwareMap.crservo.get("spin");
+
+
+
+
+        //zeroPowerBehavior makes the motors seize up when not moving so they dont slide. Like me at a party.
+        // Goated comment
+
+
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        FL.setDirection((DcMotorSimple.Direction.REVERSE));
+        //motorBL.setDirection((DcMotorSimple.Direction.REVERSE));
+        BR.setDirection((DcMotorSimple.Direction.REVERSE));
+
+
+
+        waitForStart();
+
+        if(isStopRequested()) return;
+
+        while(opModeIsActive()) {
+
+
+            //gamepad 1
+            double y = -gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
+            boolean slowMode = gamepad1.start;
+            //gamepad2
+            boolean clawOpen = gamepad2.right_bumper;
+            double clawSpin = gamepad2.right_stick_x;
+            double clawWrist = gamepad2.right_stick_y;
+            double linear = gamepad2.left_stick_y;
+            double rotate = gamepad2.left_stick_x;
+
+
+            //drive calc
+            double powerFL = (y + x + rx);
+            double powerBL = (y - x + rx);
+            double powerFR = (y - x - rx);
+            double powerBR = (y + x - rx);
+
+            //goofy ahh claw stuff
+
+            spin.setPower(-clawSpin);
+            wrist.setPower(clawWrist);
+
+            ram.setPower(linear);
+            rotation.setPower(rotate);
+/*
+            double powerFL = (1);
+            double powerBL = (1);
+            double powerFR = (1);
+            double powerBR = (1);
+*/
+            if(slowMode) {
+                BL.setPower((powerBL / 3)*2);
+                BR.setPower((powerBR / 3)*2);
+                FL.setPower((-powerFL / 3)*2);
+                FR.setPower((-powerFR / 3)*2);
+            }
+            else{
+                BL.setPower(powerBL);
+                BR.setPower(powerBR);
+                FL.setPower(-powerFL);
+                FR.setPower(-powerFR);
+            }
+
+            if(clawOpen == true){
+                grabr.setPosition(0.55);
+                grabl.setPosition(0.7);
+
+            }
+            else{
+                grabr.setPosition(0.8);
+                grabl.setPosition(0.2);//0.05
+            }
+
+
+
+        }
+//slides
+
+
+
+    }
+}
+
+
+
+
+
+// added slide code
+// Servo code is in but servos are not programmed yet :( set positions of servo for intake
+// Test if motors for slide need to be reversed
+// Add slide code to auton
+// Test if opencv works transfered from android
+//
