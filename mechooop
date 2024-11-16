@@ -98,6 +98,20 @@ public class Mechoop extends LinearOpMode {
             double powerFR = (1);
             double powerBR = (1);
 */
+            if(rotation.getCurrentPosition() > 1) {
+                rotate = -gamepad2.left_stick_x;
+            }
+            else {
+                rotate = gamepad2.left_stick_x;
+            }
+            
+            if(ram.getCurrentPosition() > 0.8) {
+                linear = -gamepad2.left_stick_y
+            }
+            else {
+                linear = gamepad2.left_stick_y
+            }
+            
             if(slowMode) {
                 BL.setPower((powerBL / 3)*2);
                 BR.setPower((powerBR / 3)*2);
